@@ -41,6 +41,17 @@ var changeGreen = function(e) {
     
 };
 
+var newCirc = function(xcor, ycor, rad, color, clicked){
+	var circ = {
+		x: xcor,
+		y: ycor,
+		rad: rad,
+		color: color,
+		clicked: clicked
+	};
+	return circ;
+};
+
 //----------------EVENT LISTENERS---------------------
 c.addEventListener('click', function(e) {
 
