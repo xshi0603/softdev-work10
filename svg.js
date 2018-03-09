@@ -1,15 +1,15 @@
 var c = document.getElementById("svgg");
 var cbutton = document.getElementById("cbutton");
 
-var createCircle = function (x, y, r, svg) {
+var createCircle = function (x, y, r, color, svg) {
 
 	var c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 	c1.setAttribute("cx", x);
 	c1.setAttribute("cy", y);
 	c1.setAttribute("r", r);
-	c1.setAttribute("fill", "blue");
+	c1.setAttribute("fill", color);
 	c1.addEventListener('click', changeGreen, true);
-	svg.append( c1);
+	return c1;
 
 };
 
@@ -41,13 +41,37 @@ var changeGreen = function(e) {
     
 };
 
-var newCirc = function(xcor, ycor, rad, color, clicked){
+var newCirc = function(xcor, ycor, rad, color, element){
 	var circ = {
 		x: xcor,
 		y: ycor,
 		rad: rad,
 		color: color,
-		clicked: clicked
+		element: document.createElementNS("http://www.w3.org/2000/svg", element),
+
+		display: function() {
+		this.element.setAttribute("cx", this.x);
+		this.element.setAttribute("cy", this.y);
+		this.element.setAttribute("r", this.rad);
+		this.element.setAttribute("fill", this.color);
+		this.element.addEventListener("click", this.change);
+		c.appendChild(this.element);
+	    },
+		change: function(e) {
+		if (this.getAttribute("fill") == "blue" || this.getAttribute("fill") == "pink") {
+		    this.setAttribute("fill", "green");
+		}
+		else {
+		    this.remove(e);
+		    var newC = newCirc(Math.random() * 500, Math.random() * 500, 10, "pink", "circle");
+		    newC.display();
+		}
+		e.stopPropagation();
+	    },
+		remove: function() {
+		svg.removeChild(this.element);
+	    }
+		
 	};
 	return circ;
 };
@@ -55,8 +79,10 @@ var newCirc = function(xcor, ycor, rad, color, clicked){
 //----------------EVENT LISTENERS---------------------
 c.addEventListener('click', function(e) {
 
-	createCircle(e.offsetX, e.offsetY, 10, this);
-	//addEventListeners();
+
+	var cir = newCirc(e.offsetX, e.offsetY, 10, "blue", "circle");
+	cir.display();
+	console.log(cir);
 
     });
 
